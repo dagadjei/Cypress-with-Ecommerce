@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker'
-import user from '../fixtures/user.json'
 
 let randomFirstname = faker.name.firstName()
 let randomLastname = faker.name.lastName()
@@ -16,7 +15,7 @@ describe('User Registration and Login', () => {
   beforeEach(() => {
     cy.visit('https://automationexercise.com/')
   })
-
+  
   it('Register', () => {
     cy.contains('Signup').click()
     cy.get('[data-qa="signup-name"]').type(randomFirstname)
@@ -40,12 +39,10 @@ describe('User Registration and Login', () => {
     cy.get('[data-qa="create-account"]').click()
     cy.contains('Account Created').should('be.visible')
   })
-
+  
   it('Login with valid Credentials', () => {
-    cy.contains('Login').click()
-    cy.get('[data-qa="login-email"]').type(user.email)
-    cy.get('[data-qa="login-password"]').type(user.password)
-    cy.get('[data-qa="login-button"]').click()
+    cy.login()
+    cy.contains('Logged in').should('be.visible')
   })
 
   it('Login with invalid credentials', () => {
@@ -54,6 +51,12 @@ describe('User Registration and Login', () => {
     cy.get('[data-qa="login-password"]').type(faker.internet.password())
     cy.get('[data-qa="login-button"]').click()
     cy.get('.login-form > form > p').contains('Your email or password is incorrect');
+  })
+
+  it('Logout user', () => {
+    cy.login()
+    cy.contains('Logout').click()
+    cy.url().should('include', '/login')
   })
 })
 
