@@ -37,7 +37,7 @@ describe('User Registration and Login', () => {
     cy.get('[data-qa="signup-button"]').click()
     cy.contains('Email Address already exist!').should('be.visible')
   })
-  */
+  
   it('Contact Us - Upload file', () => {
     cy.contains('Contact us').click()
     cy.get('h2.title').should('be.visible')
@@ -51,7 +51,28 @@ describe('User Registration and Login', () => {
     cy.get('#form-section > .btn').click()
     cy.url().should('not.include', 'contact_us')
   })
+  */
+
 })
+
+describe('Product page tests', () => {
+  beforeEach(() => {
+    cy.visit('https://automationexercise.com/')
+  })
+
+  it('Verify Products and Product detail page', () => {
+    cy.contains('Products').click()
+    cy.url().should('include', '/products')
+    cy.contains('h2', 'All Products')
+    cy.get('.choose')
+      .first()
+      .find('a[href^="/product_details/1"]')
+      .click()
+    cy.url().should('include', '/product_details/1')
+    cy.get('.product-information').should('be.visible')
+  })
+})
+
 
 
 
