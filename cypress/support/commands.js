@@ -42,3 +42,9 @@ Cypress.Commands.add('registerUser', (name, email) => {
     cy.get('[data-qa="create-account"]').click()
     cy.contains('Account Created').should('be.visible')
 })
+
+Cypress.Commands.add('goToProductPage', () => {
+    cy.contains('Products').click()
+    cy.url().should('include', '/products')
+    cy.contains('h2', 'All Products')
+})

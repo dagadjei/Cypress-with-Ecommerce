@@ -1,0 +1,16 @@
+[
+    {
+      "name": "Blue Top",
+      "description": "Women > Tops",
+      "price": "Rs. 500",
+      "quantity": 1,
+      "total": "Rs. 500"
+    },
+    {
+      "name": "Men Tshirt",
+      "description": "Men > Tshirts",
+      "price": "Rs. 400",
+      "quantity": 1,
+      "total": "Rs. 400"
+    }
+  ]
