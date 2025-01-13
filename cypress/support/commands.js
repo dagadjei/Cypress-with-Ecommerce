@@ -20,7 +20,6 @@ Cypress.Commands.add('login', () => {
 })
 
 Cypress.Commands.add('registerUser', (name, email) => {
-    cy.contains('Signup').click()
     cy.get('[data-qa="signup-name"]').type(name)
     cy.get('[data-qa="signup-email"]').type(email)
     cy.get('[data-qa="signup-button"]').click()
@@ -47,4 +46,8 @@ Cypress.Commands.add('goToProductPage', () => {
     cy.contains('Products').click()
     cy.url().should('include', '/products')
     cy.contains('h2', 'All Products')
+})
+
+Cypress.Commands.add('proceedToCheckout', () => {
+    cy.get('.col-sm-6 a').click()
 })
