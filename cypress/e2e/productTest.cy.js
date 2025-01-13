@@ -2,12 +2,14 @@ import { faker } from '@faker-js/faker'
 import user from '../fixtures/user.json'
 import products from '../fixtures/products.json'
 
+let productCount 
+
 
 describe('Product page tests', () => {
     beforeEach(() => {
       cy.visit('https://automationexercise.com/')
     })
-  
+  /*
     it('Verify Products and Product detail page', () => {
       cy.goToProductPage()
       cy.get('.choose')
@@ -18,7 +20,7 @@ describe('Product page tests', () => {
       cy.get('.product-information').should('be.visible')
     })
 
-    it('Verify Products and Product detail page', () => {
+    it('Product Search', () => {
         cy.goToProductPage()
         const searchItem = Math.random() > 0.5 ? faker.commerce.productName() : 'dress'
         cy.get('#search_product').type(searchItem)
@@ -61,5 +63,21 @@ describe('Product page tests', () => {
                 })
             })
     })
+    })
+*/
+    it('Verify Product Quantity Added to Cart', () => {
+        cy.goToProductPage()
+        cy.get('.features_items .col-sm-4').then(($items) => {
+            productCount = $items.length
+            cy.log(productCount)
+            let productSelected = Math.floor(Math.random() * productCount)
+           cy.get(`.choose a[href="/product_details/${productSelected}"]`).click()
+           const productQuantity = Math.floor(Math.random() * 10) + 1
+           cy.get('#quantity').clear().type(productQuantity)
+           cy.contains('Add to cart').click()
+           cy.get('.modal-footer > .btn').click()
+           cy.get('a[href="/view_cart"]').first().click()
+           cy.get('.disabled').should('contain', productQuantity.toString())
+        })
     })
 })
