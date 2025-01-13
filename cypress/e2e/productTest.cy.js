@@ -9,7 +9,7 @@ describe('Product page tests', () => {
     beforeEach(() => {
       cy.visit('https://automationexercise.com/')
     })
-  
+    
     it('Verify Products and Product detail page', () => {
       cy.goToProductPage()
       cy.get('.choose')
@@ -81,9 +81,14 @@ describe('Product page tests', () => {
     })
     
     it('Register during Checkout', () => {
+        
+        let newUserFirstName = faker.person.firstName()
+        let newUserEmail = faker.internet.email()
+        let randomMonthValue = Math.floor(Math.random() * 12) + 1
+        let randomYear = Math.floor(Math.random() * (2030 - 2025) + 1) + 2025
+
         cy.get('.features_items .col-sm-4').then(($items) => {
             let totalProducts = $items.length
-            cy.log(totalProducts)
             const numOfItemsToAddToCart = Math.floor(Math.random() * 4) + 1
             for(let i = 0; i < numOfItemsToAddToCart; i++){
                 const randomProduct = Math.floor(Math.random() * totalProducts)
@@ -96,9 +101,19 @@ describe('Product page tests', () => {
         })
         cy.proceedToCheckout()
         cy.get('.modal-body a[href="/login"]').click() 
-        cy.registerUser(faker.person.firstName(), faker.internet.email())
+        cy.registerUser(newUserFirstName, newUserEmail)
         cy.get('[data-qa="continue-button"]').click()
         cy.get('li a[href="/view_cart"]').click()
         cy.proceedToCheckout()
+        cy.get('.form-control').type(faker.lorem.sentence(10))
+        cy.get('.container a[href="/payment"]').click()
+        cy.get('[data-qa="name-on-card"]').type(newUserFirstName)
+        cy.get('[data-qa="card-number"]').type(faker.finance.creditCardNumber())
+        cy.get('[data-qa="cvc"]').type(faker.finance.creditCardCVV())
+        cy.get('[data-qa="expiry-month"]').type(randomMonthValue)
+        cy.get('[data-qa="expiry-year"]').type(randomYear)
+        cy.get('[data-qa="pay-button"]').click()
+        cy.url().should('include', '/payment_done')
+        cy.get('[data-qa="continue-button"]').click()
     })
 })
