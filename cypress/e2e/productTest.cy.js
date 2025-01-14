@@ -113,4 +113,17 @@ describe('Product page tests', () => {
         cy.proceedToCheckout()
         cy.makePayment()
     })
+    
+    it('Remove items from cart', () => {
+        cy.addItemsToCart()
+        cy.get('li a[href="/view_cart"]').click()
+        cy.get('tr').then(($rows) => {
+            let itemsInCart = $rows.length - 1
+            for(let i = 0; i < itemsInCart; i++){
+                cy.get('tr[id^="product"]').eq(i).within(() => {
+                    cy.get('.cart_delete').click()
+                })
+            }
+        })
+    })
 })
