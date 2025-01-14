@@ -104,4 +104,13 @@ describe('Product page tests', () => {
         cy.proceedToCheckout()
         cy.makePayment()
     })
+
+    it('Login before checkout', () => {
+        cy.login()
+        cy.contains('Logged in').should('be.visible')
+        cy.addItemsToCart()
+        cy.get('li a[href="/view_cart"]').click()
+        cy.proceedToCheckout()
+        cy.makePayment()
+    })
 })
