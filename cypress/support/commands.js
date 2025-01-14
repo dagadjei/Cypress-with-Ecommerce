@@ -40,6 +40,7 @@ Cypress.Commands.add('registerUser', (name, email) => {
     cy.get('[data-qa="mobile_number"]').type(faker.phone.number())
     cy.get('[data-qa="create-account"]').click()
     cy.contains('Account Created').should('be.visible')
+    cy.get('[data-qa="continue-button"]').click()
 })
 
 Cypress.Commands.add('goToProductPage', () => {
@@ -50,4 +51,38 @@ Cypress.Commands.add('goToProductPage', () => {
 
 Cypress.Commands.add('proceedToCheckout', () => {
     cy.get('.col-sm-6 a').click()
+})
+
+Cypress.Commands.add('addItemsToCart', () => {
+    cy.get('.features_items .col-sm-4').then(($items) => {
+        let totalProducts = $items.length
+        const numOfItemsToAddToCart = Math.floor(Math.random() * 4) + 1
+        for(let i = 0; i < numOfItemsToAddToCart; i++){
+            const randomProduct = Math.floor(Math.random() * totalProducts)
+            cy.get('.features_items .col-sm-4').eq(randomProduct).within(() => {
+                cy.get('a[data-product-id]').first().click()
+            })
+            cy.contains('Continue Shopping').click()
+        }
+    })
+})
+
+Cypress.Commands.add('makePayment', () => {
+
+    let newUserFirstName = faker.person.firstName()
+    let newUserEmail = faker.internet.email()
+    let randomMonthValue = Math.floor(Math.random() * 12) + 1
+    let randomYear = Math.floor(Math.random() * (2030 - 2025) + 1) + 2025
+    
+    cy.url().should('include', '/checkout')
+    cy.get('.form-control').type(faker.lorem.sentence(10))
+    cy.get('.container a[href="/payment"]').click()
+    cy.get('[data-qa="name-on-card"]').type(newUserFirstName)
+    cy.get('[data-qa="card-number"]').type(faker.finance.creditCardNumber())
+    cy.get('[data-qa="cvc"]').type(faker.finance.creditCardCVV())
+    cy.get('[data-qa="expiry-month"]').type(randomMonthValue)
+    cy.get('[data-qa="expiry-year"]').type(randomYear)
+    cy.get('[data-qa="pay-button"]').click()
+    cy.url().should('include', '/payment_done')
+    cy.get('[data-qa="continue-button"]').click()
 })
