@@ -126,4 +126,8 @@ describe('Product page tests', () => {
             }
         })
     })
+
+    it('View Category products', () => {
+        
+    })
 })
