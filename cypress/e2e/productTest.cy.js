@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
 import user from '../fixtures/user.json'
 import products from '../fixtures/products.json'
+import categories from '../fixtures/categories.json'
 
 let productCount 
 
@@ -44,7 +45,7 @@ describe('Product page tests', () => {
         })
       })
 
-    it('erify products Added to Cart', () => {
+    it('Verify products Added to Cart', () => {
         const firstTableRowHeader = 1
         cy.goToProductPage()
         cy.get('a[data-product-id="1"]').first().click()
@@ -128,6 +129,21 @@ describe('Product page tests', () => {
     })
 
     it('View Category products', () => {
-        
+        cy.get('.panel-title').then(($categoryList) => {
+            const category = Object.keys(categories)
+            const categoryCount = category.length
+            for(let i=0; i<categoryCount; i++){
+                cy.get('.panel-title').eq(i).within(() => {
+                    cy.get('a').invoke('text').then(($text) => {
+                        expect($text.trim()).to.eq(category[i])
+                    })
+                })
+                cy.get('.panel-title').eq(i).click()
+                cy.get('.panel-body').then(($numOfItems) => {
+                    cy.log($numOfItems.length)
+                })
+            }
+
+        })
     })
 })
