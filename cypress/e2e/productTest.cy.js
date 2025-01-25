@@ -1,6 +1,4 @@
 import { faker } from '@faker-js/faker'
-import user from '../fixtures/user.json'
-import products from '../fixtures/products.json'
 import categories from '../fixtures/categories.json'
 
 let productCount 
@@ -127,7 +125,7 @@ describe('Product page tests', () => {
             }
         })
     })
-
+    
     it('View Category products', () => {
         cy.get('.panel-title').then(($categoryList) => {
             const category = Object.keys(categories)
@@ -137,13 +135,22 @@ describe('Product page tests', () => {
                     cy.get('a').invoke('text').then(($text) => {
                         expect($text.trim()).to.eq(category[i])
                     })
+                    cy.get('a').click()
                 })
-                cy.get('.panel-title').eq(i).click()
-                cy.get('.panel-body').then(($numOfItems) => {
-                    cy.log($numOfItems.length)
+                cy.get(`#${category[i]} > .panel-body > ul > li`).then(($catSubItems) => {
+                    const numOfCatSubItems = $catSubItems.length
+                    const subCategoryList = categories[category[i]]
+                    for(let j=0; j<numOfCatSubItems; j++){
+                        cy.get(`#${category[i]} > .panel-body > ul > li`).eq(j).within(() => {
+                            cy.get('a').invoke('text').then(($subCatText) => {
+                                expect($subCatText.trim()).to.eq(subCategoryList[j])
+                            })
+                        })
+                    }
                 })
             }
 
         })
     })
+    
 })
