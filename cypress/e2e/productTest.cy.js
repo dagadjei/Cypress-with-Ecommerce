@@ -1,5 +1,6 @@
-import { faker } from '@faker-js/faker'
+import { faker} from '@faker-js/faker'
 import categories from '../fixtures/categories.json'
+import brands from '../fixtures/brands.json'
 
 let productCount 
 
@@ -8,7 +9,7 @@ describe('Product page tests', () => {
     beforeEach(() => {
       cy.visit('https://automationexercise.com/')
     })
-    
+
     it('Verify Products and Product detail page', () => {
       cy.goToProductPage()
       cy.get('.choose')
@@ -150,6 +151,33 @@ describe('Product page tests', () => {
                 })
             }
 
+        })
+    })
+
+    it('View Brands', () => {
+        let selectedBrand
+
+        cy.goToProductPage()
+        cy.get('.brands_products').contains('Brands').should('be.visible')
+        cy.get('.brands-name > ul > li').then(($brands) => {
+            const brandCount = $brands.length
+            const Brands = Object.keys(brands)
+            for(let i=0; i<brandCount; i++){
+                cy.get('.brands-name > ul > li').eq(i).within(() => {
+                    cy.get('a').invoke('text').then(($brand) => {
+                        const brandName = $brand.replace(/\(\d+\)/, '').trim()
+                        expect(brandName).to.eq(brands[Brands][i])
+                    })
+                })
+            }
+
+        const selectRandomBrand = Math.floor(Math.random() * brandCount)
+        cy.get('.brands-name > ul > li').eq(selectRandomBrand).then(($brandItem) => {
+            selectedBrand = $brandItem.find('a').text().replace(/\(\d+\)/, '').trim();
+            cy.log(selectedBrand);
+            cy.wrap($brandItem).click();
+            cy.get('.title').should('be.visible').and('contain', selectedBrand);
+         })
         })
     })
     
