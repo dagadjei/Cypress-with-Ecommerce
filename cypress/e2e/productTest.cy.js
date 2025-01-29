@@ -9,7 +9,7 @@ describe('Product page tests', () => {
     beforeEach(() => {
       cy.visit('https://automationexercise.com/')
     })
-
+    /*
     it('Verify Products and Product detail page', () => {
       cy.goToProductPage()
       cy.get('.choose')
@@ -178,6 +178,48 @@ describe('Product page tests', () => {
             cy.wrap($brandItem).click();
             cy.get('.title').should('be.visible').and('contain', selectedBrand);
          })
+        })
+    })
+    */
+    it('Search Product And Verify Cart After Login', () => {
+        cy.goToProductPage()
+        const allItems = Object.values(categories).flat()
+        const totalProductType = allItems.length
+        const randomItemIndex = Math.floor(Math.random() * totalProductType)
+        const randomItem = allItems[randomItemIndex]
+        cy.get('#search_product').clear().type(randomItem)
+        cy.get('#submit_search').click()
+        cy.get('.features_items').should('be.visible')
+        cy.get('.features_items').then(($items) => {
+            const totalProductsListed = $items.find('.col-sm-4').length
+            cy.wrap(totalProductsListed).as('totalProductsListed')
+            for(let i=0; i<totalProductsListed; i++){
+                cy.get('.features_items .col-sm-4').eq(i).within(() => {
+                    cy.get('a').first().click()
+                })
+                cy.get('.modal-footer > .btn').click()
+            }
+        })
+        cy.get('a[href="/view_cart"]').first().click()
+        cy.get('tr').then(($rows) => {
+            const totalItemsInCart = $rows.length - 1
+            cy.wrap(totalItemsInCart).as('totalItemsInCart')
+        })
+        cy.get('@totalProductsListed').then((totalProductsListed) => {
+            cy.get('@totalItemsInCart').then((totalItemsInCart) => {
+                expect(totalItemsInCart).to.eq(totalProductsListed)
+            })
+        })
+        cy.login()
+        cy.get('a[href="/view_cart"]').first().click()
+        cy.get('tr').then(($rows) => {
+            const totalItemsInCart = $rows.length - 1
+            cy.wrap(totalItemsInCart).as('totalItemsInCart')
+        })
+        cy.get('@totalProductsListed').then((totalProductsListed) => {
+            cy.get('@totalItemsInCart').then((totalItemsInCart) => {
+                expect(totalItemsInCart).to.eq(totalProductsListed)
+            })
         })
     })
     
