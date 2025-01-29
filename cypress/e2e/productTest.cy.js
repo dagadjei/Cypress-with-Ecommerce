@@ -9,7 +9,7 @@ describe('Product page tests', () => {
     beforeEach(() => {
       cy.visit('https://automationexercise.com/')
     })
-    /*
+    
     it('Verify Products and Product detail page', () => {
       cy.goToProductPage()
       cy.get('.choose')
@@ -180,7 +180,7 @@ describe('Product page tests', () => {
          })
         })
     })
-    */
+
     it('Search Product And Verify Cart After Login', () => {
         cy.goToProductPage()
         const allItems = Object.values(categories).flat()
