@@ -174,7 +174,6 @@ describe('Product page tests', () => {
         const selectRandomBrand = Math.floor(Math.random() * brandCount)
         cy.get('.brands-name > ul > li').eq(selectRandomBrand).then(($brandItem) => {
             selectedBrand = $brandItem.find('a').text().replace(/\(\d+\)/, '').trim();
-            cy.log(selectedBrand);
             cy.wrap($brandItem).click();
             cy.get('.title').should('be.visible').and('contain', selectedBrand);
          })
@@ -234,7 +233,6 @@ describe('Product page tests', () => {
         })
         cy.get('.active > a').invoke('text').then(($reviewText) => {
             const reviewText = $reviewText.trim()
-            cy.log(reviewText)
             const reviewSectionHeading = 'Write Your Review'
             expect(reviewText).to.eq(reviewSectionHeading)
         })
