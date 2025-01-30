@@ -223,4 +223,26 @@ describe('Product page tests', () => {
         })
     })
     
+    it('Add review on a product', () => {
+        cy.goToProductPage()
+        cy.get('.features_items .col-sm-4').then(($items) => {
+            const productCount = $items.length
+            const productSelected = Math.floor(Math.random() * productCount)
+            cy.get('.features_items .col-sm-4').eq(productSelected).within(() => {
+                cy.get('.choose a[href^="/product_details"]').click()
+            })
+        })
+        cy.get('.active > a').invoke('text').then(($reviewText) => {
+            const reviewText = $reviewText.trim()
+            cy.log(reviewText)
+            const reviewSectionHeading = 'Write Your Review'
+            expect(reviewText).to.eq(reviewSectionHeading)
+        })
+        cy.get('#name').clear().type(faker.person.firstName())
+        cy.get('#email').clear().type(faker.internet.email())
+        cy.get('#review').clear().type(faker.lorem.sentence())
+        cy.get('#button-review').click()
+        cy.contains('Thank you for your review').should('be.visible')
+    })
+    
 })
