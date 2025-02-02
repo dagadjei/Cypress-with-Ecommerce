@@ -9,7 +9,7 @@ describe('Product page tests', () => {
     beforeEach(() => {
       cy.visit('https://automationexercise.com/')
     })
-    
+
     it('Verify Products and Product detail page', () => {
       cy.goToProductPage()
       cy.get('.choose')
@@ -242,5 +242,21 @@ describe('Product page tests', () => {
         cy.get('#button-review').click()
         cy.contains('Thank you for your review').should('be.visible')
     })
-    
+
+    it("Verify address details in checkout", () => {
+        const randomAddress = Cypress.env('randomAddress')
+        cy.contains('Signup').click()
+        cy.registerUser(faker.person.firstName(), faker.internet.email())
+        cy.addItemsToCart()
+        cy.get('li a[href="/view_cart"]').click()
+        cy.proceedToCheckout()
+        cy.get('#address_delivery').then(($address) => {
+            const address = $address.text().trim()
+            expect(address).to.include(randomAddress)
+        })
+        cy.get('#address_invoice').then(($address) => {
+            const address = $address.text().trim()
+            expect(address).to.include(randomAddress)
+        })
+    })
 })

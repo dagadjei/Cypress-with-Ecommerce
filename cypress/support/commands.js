@@ -10,6 +10,8 @@ let randomAptNum = faker.address.buildingNumber()
 let randomPassword = faker.internet.password()
 let randomDayInMonth = Math.floor(Math.random() * (31) + 1);
 let randomMonthValue = Math.floor(Math.random() * (12) + 1);
+
+Cypress.env('randomAddress', randomAddress)
 //let randomYear = Math.floor(Math.random() * (100) + 1) + 1900
 
 Cypress.Commands.add('login', () => {
