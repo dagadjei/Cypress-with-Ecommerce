@@ -86,5 +86,12 @@ Cypress.Commands.add('makePayment', () => {
     cy.get('[data-qa="expiry-year"]').type(randomYear)
     cy.get('[data-qa="pay-button"]').click()
     cy.url().should('include', '/payment_done')
+})
+
+Cypress.Commands.add('continueAfterMakeingPayment', () => {
     cy.get('[data-qa="continue-button"]').click()
+})
+
+Cypress.Commands.add('downloadInvoice', () => {
+    cy.get('.col-sm-9 > .btn-default').click()
 })

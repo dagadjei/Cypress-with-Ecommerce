@@ -9,7 +9,7 @@ describe('Product page tests', () => {
     beforeEach(() => {
       cy.visit('https://automationexercise.com/')
     })
-
+    
     it('Verify Products and Product detail page', () => {
       cy.goToProductPage()
       cy.get('.choose')
@@ -93,6 +93,7 @@ describe('Product page tests', () => {
         cy.get('li a[href="/view_cart"]').click()
         cy.proceedToCheckout()
         cy.makePayment()
+        cy.continueAfterMakeingPayment()
     })
 
     it('Regiser before checkout', () => {
@@ -103,6 +104,7 @@ describe('Product page tests', () => {
         cy.url().should('include', '/view_cart')
         cy.proceedToCheckout()
         cy.makePayment()
+        cy.continueAfterMakeingPayment()
     })
 
     it('Login before checkout', () => {
@@ -112,6 +114,7 @@ describe('Product page tests', () => {
         cy.get('li a[href="/view_cart"]').click()
         cy.proceedToCheckout()
         cy.makePayment()
+        cy.continueAfterMakeingPayment()
     })
     
     it('Remove items from cart', () => {
@@ -258,5 +261,17 @@ describe('Product page tests', () => {
             const address = $address.text().trim()
             expect(address).to.include(randomAddress)
         })
+    })
+    
+    it("Download Invoice after Purchase", () => {
+        cy.addItemsToCart()
+        cy.get('li a[href="/view_cart"]').click()
+        cy.proceedToCheckout()
+        cy.get('.modal-body a[href="/login"]').click() 
+        cy.registerUser(faker.person.firstName(), faker.internet.email())
+        cy.get('li a[href="/view_cart"]').click()
+        cy.proceedToCheckout()
+        cy.makePayment()
+        cy.downloadInvoice()
     })
 })
