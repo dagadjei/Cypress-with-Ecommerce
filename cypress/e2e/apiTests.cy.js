@@ -29,4 +29,15 @@ describe('API Tests', () => {
             expect(responseBody).to.have.property('message', 'This request method is not supported.')
         })
     })
+
+    it('Get All Brands List', () => {
+        cy.request({
+            method: 'GET',
+            url: 'https://automationexercise.com/api/brandsList'
+        }).then((response) => {
+            expect(response.status).to.equal(200)
+            const responseBody = JSON.parse(response.body)
+            expect(responseBody).to.have.property('brands')
+        })
+    })
 });
