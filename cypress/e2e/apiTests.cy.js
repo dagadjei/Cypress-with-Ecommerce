@@ -1,3 +1,7 @@
+import { parseResponse } from "../support/helpers";
+
+//There might be a general issue with the API as unsupported methods are returning 200 status code
+
 describe('API Tests', () => {
     it("Get All Products List", () => {
         cy.request({
@@ -38,6 +42,17 @@ describe('API Tests', () => {
             expect(response.status).to.equal(200)
             const responseBody = JSON.parse(response.body)
             expect(responseBody).to.have.property('brands')
+        })
+    })
+
+    it('Put to All Brands List', () => {
+        cy.request({
+            method: 'PUT',
+            url: 'https://automationexercise.com/api/brandsList'
+        }).then((response) => {
+            expect(response.status).to.equal(200)
+            const responseBody = parseResponse(response)
+            expect(responseBody).to.have.property('message', 'This request method is not supported.')
         })
     })
 });
