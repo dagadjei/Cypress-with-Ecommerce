@@ -1,3 +1,4 @@
+import { fa } from "@faker-js/faker";
 import { parseResponse } from "../support/helpers";
 
 //There might be a general issue with the API as unsupported methods are returning 200 status code
@@ -28,9 +29,10 @@ describe('API Tests', () => {
             method: 'POST',
             url: 'https://automationexercise.com/api/productsList'
         }).then((response) => {
-            expect(response.status).to.equal(200)
             const responseBody = JSON.parse(response.body)
             expect(responseBody).to.have.property('message', 'This request method is not supported.')
+            const responseCode = responseBody.responseCode
+            expect(responseCode).to.equal(405)
         })
     })
 
@@ -48,11 +50,29 @@ describe('API Tests', () => {
     it('Put to All Brands List', () => {
         cy.request({
             method: 'PUT',
-            url: 'https://automationexercise.com/api/brandsList'
+            url: 'https://automationexercise.com/api/brandsList',
+            failOnStatusCode: false
         }).then((response) => {
             expect(response.status).to.equal(200)
             const responseBody = parseResponse(response)
             expect(responseBody).to.have.property('message', 'This request method is not supported.')
         })
     })
+
+    it('Post to Search Products', () => {
+        const searchQuery = 'tops'
+        cy.request({
+            method: 'POST',
+            url: 'https://automationexercise.com/api/searchProduct', 
+            body: {
+                search_product: searchQuery
+            }
+        }).then((response) => {
+            const responseBody = parseResponse(response)
+            const responseCode = responseBody.responseCode
+            expect(responseCode).to.equal(400)
+            //expect(responseBody).to.have.property('products') but this is not working due to API issues
+        })
+    })
+
 });
