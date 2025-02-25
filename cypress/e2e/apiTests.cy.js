@@ -159,6 +159,7 @@ describe('API Tests', () => {
         }).then((response) => {
             const responseBody = parseResponse(response)
             const responseCode = responseBody.responseCode
+            //API is not working as expected
             //expect(responseCode).to.equal(404)
             //expect(responseBody).to.have.property('message', 'User not found!')
         })
