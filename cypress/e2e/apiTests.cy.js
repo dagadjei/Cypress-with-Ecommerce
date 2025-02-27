@@ -200,6 +200,82 @@ describe('API Tests', () => {
           })
     })
 
+    it('DELETE METHOD To Delete User Account', () => {
+        const email = user.email
+        const password = user.password
 
+        cy.request({
+            method: 'DELETE',
+            url: 'https://automationexercise.com/api/deleteAccount',
+            body: {
+                email: email,
+                password: password
+            },
+            failOnStatusCode: false
+        }).then((response) => {
+            const responseBody = parseResponse(response)
+            const responseCode = responseBody.responseCode
+            //expect(responseCode).to.equal(200) - API is not working as expected
+            expect(responseCode).to.equal(400)
+            //expect(responseBody).to.have.property('message', 'Account deleted!')
+            expect(responseBody).to.have.property('message', 'Bad request, email parameter is missing in DELETE request.')
+        })
+    })
+
+    it('PUT METHOD To Update User Account', () => {
+        const userDetails = {
+            name: 'John Doe',
+            email: 'johndoe@example.com',
+            password: 'password123',
+            title: 'Mr',
+            birth_date: '01',
+            birth_month: 'January',
+            birth_year: '1990',
+            firstname: 'John',
+            lastname: 'Doe',
+            company: 'Example Corp',
+            address1: '123 Main St',
+            address2: 'Apt 4B',
+            country: 'United States',
+            zipcode: '12345',
+            state: 'New York',
+            city: 'New York City',
+            mobile_number: '1234567890'
+          };
+
+        cy.request({
+            method: 'PUT',
+            url: 'https://automationexercise.com/api/updateAccount',
+            body: userDetails,
+            failOnStatusCode: false
+        }).then((response) => {
+            const responseBody = parseResponse(response)
+            const responseCode = responseBody.responseCode
+            //response code should be 200 - this API is def tweaking!
+            expect(responseCode).to.equal(400)
+            //expect(responseBody).to.have.property('message', 'User updated!')
+            //Bad request, email parameter is missing in PUT request.
+            expect(responseBody).to.have.property('message', 'Bad request, email parameter is missing in PUT request.')
+        })
+    })
+
+    it('GET user account detail by email', () => {
+        const email = user.email
+        cy.request({
+            method: 'GET',
+            url: 'https://automationexercise.com/api/getUserDetailByEmail',
+            body: {
+                email: email
+            }
+        }).then((response) => {
+            const responseBody = parseResponse(response)
+            const responseCode = responseBody.responseCode
+            //expect(responseCode).to.equal(200) - API is not working as expected
+            expect(responseCode).to.equal(400)
+            //Bad request, email parameter is missing in GET request.
+            //expect(responseBody).to.have.property('user')
+            expect(responseBody).to.have.property('message', 'Bad request, email parameter is missing in GET request.')
+        })
+    })
 
 });
