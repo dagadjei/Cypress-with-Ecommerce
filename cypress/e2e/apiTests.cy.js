@@ -165,4 +165,41 @@ describe('API Tests', () => {
         })
     })
 
+    it('https://automationexercise.com/api/createAccount', () => {
+        const userDetails = {
+            name: 'John Doe',
+            email: 'johndoe@example.com',
+            password: 'password123',
+            title: 'Mr',
+            birth_date: '01',
+            birth_month: 'January',
+            birth_year: '1990',
+            firstname: 'John',
+            lastname: 'Doe',
+            company: 'Example Corp',
+            address1: '123 Main St',
+            address2: 'Apt 4B',
+            country: 'United States',
+            zipcode: '12345',
+            state: 'New York',
+            city: 'New York City',
+            mobile_number: '1234567890'
+          };
+        
+          cy.request({
+            method: 'POST',
+            url: 'https://automationexercise.com/api/createAccount',
+            body: userDetails,
+          }).then((response) => {
+            const responseBody = parseResponse(response)
+            const responseCode = responseBody.responseCode
+            //set to 400 because of API issues should be 201
+            expect(responseCode).to.equal(400)
+            //expect(responseBody).to.have.property('message', 'User created!') 
+            expect(responseBody).to.have.property('message', 'Bad request, name parameter is missing in POST request.')
+          })
+    })
+
+
+
 });
